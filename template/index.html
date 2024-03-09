@@ -1,0 +1,119 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>WebCam</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <center>
+        <main>
+            <h1>SafeWalk</h1>
+            <div class="container">
+                <div class="display-date">
+                    <span id="day">day</span>,
+                    <span id="daynum">00</span>
+                    <span id="month">month</span>
+                    <span id="year">0000</span>
+                </div>
+                <div class="line"></div>
+                <div class="display-time"></div>
+            </div>
+            <img src="{%static 'assets/noise.gif'%}" alt="Camera" id="cam0">
+        </main>
+
+        <div class="tools">
+            <select name="performance" id="perf_selector">
+                <option value="0">HIGH SPEED</option>
+                <option value="1">ACCURATE</option>
+                <option value="2">BALANCED</option>
+            </select>
+            <button>go</button>
+            <div class="line"></div>
+            <button id="btn_pause" onclick="pauseFunction()" value="0">StartVideo</button>
+        </div>
+
+        <footer id="video_analysis">
+            <a href="analyse">Video Analyser</a>
+        </footer>
+        <script>
+            const displayTime = document.querySelector(".display-time");
+            // Time
+            function showTime() {
+                let time = new Date();
+                displayTime.innerText = time.toLocaleTimeString("en-US", { hour12: false });
+                setTimeout(showTime, 1000);
+            }
+
+            showTime();
+
+            // Date
+            function updateDate() {
+                let today = new Date();
+
+                // return number
+                let dayName = today.getDay(),
+                    dayNum = today.getDate(),
+                    month = today.getMonth(),
+                    year = today.getFullYear();
+
+                const months = [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                ];
+                const dayWeek = [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                ];
+                // value -> ID of the html element
+                const IDCollection = ["day", "daynum", "month", "year"];
+                // return value array with number as a index
+                const val = [dayWeek[dayName], dayNum, months[month], year];
+                for (let i = 0; i < IDCollection.length; i++) {
+                    document.getElementById(IDCollection[i]).firstChild.nodeValue = val[i];
+                }
+            }
+
+            updateDate();
+
+            function pauseFunction() {
+                const btn = document.getElementById("btn_pause")
+                const img = document.getElementById("cam0")
+                if (btn.value == "1") {
+                    console.log("BUTTONCLICK, pausing....");
+                    btn.value = "0"
+                    btn.innerText = "StartVideo"
+                    img.src = "/static/assets/noise.gif"
+                }
+                else {
+                    btn.value = "1"
+                    btn.innerText = "PauseVideo"
+                    console.log("Button play clicked!");
+                    img.src = "/video"
+                }
+            }
+        </script>
+</body>
+
+</html>
